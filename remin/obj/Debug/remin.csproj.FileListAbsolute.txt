@@ -1,0 +1,14 @@
+D:\visual\repos\remin\remin\bin\Debug\remin.exe.config
+D:\visual\repos\remin\remin\bin\Debug\remin.exe
+D:\visual\repos\remin\remin\bin\Debug\remin.pdb
+D:\visual\repos\remin\remin\obj\Debug\remin.csproj.AssemblyReference.cache
+D:\visual\repos\remin\remin\obj\Debug\MainWindow.g.cs
+D:\visual\repos\remin\remin\obj\Debug\App.g.cs
+D:\visual\repos\remin\remin\obj\Debug\remin_MarkupCompile.cache
+D:\visual\repos\remin\remin\obj\Debug\MainWindow.baml
+D:\visual\repos\remin\remin\obj\Debug\remin.g.resources
+D:\visual\repos\remin\remin\obj\Debug\remin.Properties.Resources.resources
+D:\visual\repos\remin\remin\obj\Debug\remin.csproj.GenerateResource.cache
+D:\visual\repos\remin\remin\obj\Debug\remin.csproj.CoreCompileInputs.cache
+D:\visual\repos\remin\remin\obj\Debug\remin.exe
+D:\visual\repos\remin\remin\obj\Debug\remin.pdb
