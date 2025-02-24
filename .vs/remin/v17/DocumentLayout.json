@@ -1,13 +1,13 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\visual\\repos\\remin\\",
+  "WorkspaceRootPath": "F:\\visual\\repos\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B8F6CB77-667C-447F-9A4D-D4B878E4CC5E}|remin\\remin.csproj|d:\\visual\\repos\\remin\\remin\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{B8F6CB77-667C-447F-9A4D-D4B878E4CC5E}|remin\\remin.csproj|f:\\visual\\repos\\remin\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{B8F6CB77-667C-447F-9A4D-D4B878E4CC5E}|remin\\remin.csproj|solutionrelative:remin\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8F6CB77-667C-447F-9A4D-D4B878E4CC5E}|remin\\remin.csproj|D:\\visual\\repos\\remin\\remin\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{B8F6CB77-667C-447F-9A4D-D4B878E4CC5E}|remin\\remin.csproj|F:\\visual\\repos\\remin\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B8F6CB77-667C-447F-9A4D-D4B878E4CC5E}|remin\\remin.csproj|solutionrelative:remin\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -24,22 +24,21 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "MainWindow.xaml.cs",
-              "DocumentMoniker": "D:\\visual\\repos\\remin\\remin\\MainWindow.xaml.cs",
+              "DocumentMoniker": "F:\\visual\\repos\\remin\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "remin\\MainWindow.xaml.cs",
-              "ToolTip": "D:\\visual\\repos\\remin\\remin\\MainWindow.xaml.cs",
+              "ToolTip": "F:\\visual\\repos\\remin\\MainWindow.xaml.cs",
               "RelativeToolTip": "remin\\MainWindow.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAtwCQAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-22T08:22:23.674Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-22T08:22:23.674Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "MainWindow.xaml",
-              "DocumentMoniker": "D:\\visual\\repos\\remin\\remin\\MainWindow.xaml",
+              "DocumentMoniker": "F:\\visual\\repos\\remin\\MainWindow.xaml",
               "RelativeDocumentMoniker": "remin\\MainWindow.xaml",
-              "ToolTip": "D:\\visual\\repos\\remin\\remin\\MainWindow.xaml",
+              "ToolTip": "F:\\visual\\repos\\remin\\MainWindow.xaml",
               "RelativeToolTip": "remin\\MainWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-02-22T08:14:37.657Z",

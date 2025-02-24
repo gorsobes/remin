@@ -12,3 +12,17 @@ D:\visual\repos\remin\remin\obj\Debug\remin.csproj.GenerateResource.cache
 D:\visual\repos\remin\remin\obj\Debug\remin.csproj.CoreCompileInputs.cache
 D:\visual\repos\remin\remin\obj\Debug\remin.exe
 D:\visual\repos\remin\remin\obj\Debug\remin.pdb
+F:\visual\repos\remin\bin\Debug\remin.exe.config
+F:\visual\repos\remin\bin\Debug\remin.exe
+F:\visual\repos\remin\bin\Debug\remin.pdb
+F:\visual\repos\remin\obj\Debug\remin.csproj.AssemblyReference.cache
+F:\visual\repos\remin\obj\Debug\MainWindow.baml
+F:\visual\repos\remin\obj\Debug\MainWindow.g.cs
+F:\visual\repos\remin\obj\Debug\App.g.cs
+F:\visual\repos\remin\obj\Debug\remin_MarkupCompile.cache
+F:\visual\repos\remin\obj\Debug\remin.g.resources
+F:\visual\repos\remin\obj\Debug\remin.Properties.Resources.resources
+F:\visual\repos\remin\obj\Debug\remin.csproj.GenerateResource.cache
+F:\visual\repos\remin\obj\Debug\remin.csproj.CoreCompileInputs.cache
+F:\visual\repos\remin\obj\Debug\remin.exe
+F:\visual\repos\remin\obj\Debug\remin.pdb
