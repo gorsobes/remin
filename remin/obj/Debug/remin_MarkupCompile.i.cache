@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\visual\repos\remin\remin\obj\Debug\
+F:\visual\repos\remin\obj\Debug\
 remin
 none
 false
 DEBUG;TRACE
-D:\visual\repos\remin\remin\App.xaml
-1219584333
+
+2728866012
 
 6-793535042
 13-38814620
-MainWindow.xaml;
+App.xaml;MainWindow.xaml;
 
-True
+False
 

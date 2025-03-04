@@ -1,9 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
+
+
 
 namespace remin
 {
@@ -12,183 +16,151 @@ namespace remin
         private const string FilePath = "reminders.txt";
         private const string HistoryFilePath = "history.txt";
 
+        public ObservableCollection<string> Reminders { get; set; } = new ObservableCollection<string>();
+
+        private DispatcherTimer reminderTimer = new DispatcherTimer();
 
         public MainWindow()
         {
-            InitializeComponent(); // Инициализация компонентов
-            InputTextBox.Focus();
+            InitializeComponent();
 
-            // Устанавливаем текущую дату по умолчанию
-            ReminderDatePicker.SelectedDate = DateTime.Today;
+            reminderTimer.Interval = TimeSpan.FromMinutes(1); // Проверять каждую минуту
+            reminderTimer.Tick += ReminderTimer_Tick;
+            reminderTimer.Start();
 
-            // Загружаем напоминания из файла
-            LoadReminders();
+            Reminders = new ObservableCollection<string>(); // Инициализация коллекции
+            DataContext = this; // Установка контекста данных
+            ReminderDatePicker.SelectedDate = DateTime.Today; // Устанавливаем текущую дату
+            LoadReminders(); // Загружаем напоминания
+            ApplyDateFilter(); // Фильтруем сразу после загрузки
         }
+
+
+        private void ReminderTimer_Tick(object sender, EventArgs e)
+        {
+            string currentTime = DateTime.Now.ToString("HH:mm"); // Текущее время
+
+            foreach (var reminder in Reminders.ToList()) // Перебираем все задания
+            {
+                string[] parts = reminder.Split(' ');
+                if (parts.Length >= 3)
+                {
+                    string reminderTime = parts[1]; // Время напоминания
+                    if (reminderTime == currentTime && reminderTime != "00:00")
+                    {
+                        ShowReminderWindow(reminder);
+                    }
+                }
+            }
+        }
+
+        private void ShowReminderWindow(string reminderText)
+        {
+            Window reminderWindow = new Window
+            {
+                Title = "Напоминание!",
+                Width = 350,
+                Height = 450,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                Topmost = true // Поверх всех окон
+            };
+
+            StackPanel panel = new StackPanel { Margin = new Thickness(10) };
+            panel.Children.Add(new TextBlock { Text = reminderText, TextWrapping = TextWrapping.Wrap });
+
+            Button closeButton = new Button { Content = "Закрыть", Margin = new Thickness(5) };
+            closeButton.Click += (s, e) => reminderWindow.Close();
+
+            Button snoozeButton = new Button { Content = "Отложить на 15 минут", Margin = new Thickness(5) };
+            snoozeButton.Click += (s, e) =>
+            {
+                reminderWindow.Close();
+                SnoozeReminder(reminderText);
+            };
+
+            panel.Children.Add(closeButton);
+            panel.Children.Add(snoozeButton);
+            reminderWindow.Content = panel;
+
+            reminderWindow.ShowDialog();
+        }
+
+        private void SnoozeReminder(string reminderText)
+        {
+            string[] parts = reminderText.Split(' ');
+            if (parts.Length >= 3 && DateTime.TryParse(parts[1], out DateTime originalTime))
+            {
+                DateTime newTime = originalTime.AddMinutes(15);
+                string newReminder = $"{parts[0]} {newTime:HH:mm} {string.Join(" ", parts.Skip(2))}";
+
+                Reminders.Add(newReminder);
+                SaveReminders();
+            }
+        }
+
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(InputTextBox.Text))
             {
-                // Дата всегда текущая (по умолчанию)
-                string date = ReminderDatePicker.SelectedDate?.ToShortDateString() ?? DateTime.Today.ToShortDateString();
-                string time = (ReminderTimePicker.SelectedItem as ComboBoxItem)?.Content.ToString();
+                string text = InputTextBox.Text;
+                string date = ReminderDatePicker.SelectedDate?.ToString("dd.MM.yyyy") ?? DateTime.Today.ToString("dd.MM.yyyy");
+                string time = ReminderTimePicker.SelectedItem is ComboBoxItem selectedItem && selectedItem.Content.ToString() != "--:--"
+                              ? selectedItem.Content.ToString()
+                              : "00:00";
 
-                // Если время не выбрано, оставляем его пустым
-                if (time == "--:--")
-                    time = null;
+                string reminder = $"{date} {time} {text}";
+                Reminders.Add(reminder);
 
-                // Формируем текст напоминания
-                string reminderText = time == null ? $"{date} - {InputTextBox.Text}" : $"{date} {time} - {InputTextBox.Text}";
-                RemindersList.Items.Add(reminderText);
+                // Обновляем список (чтобы данные добавились в коллекцию)
+                RemindersList.ItemsSource = null;
+                RemindersList.ItemsSource = Reminders;
 
-                // Очищаем поле ввода и сбрасываем время
+                // Применяем фильтр, чтобы показывались только задачи на выбранную дату
+                ApplyDateFilter();
+
                 InputTextBox.Clear();
-                ReminderTimePicker.SelectedIndex = 0;
                 AddButton.IsEnabled = false;
-
-                // Сохраняем напоминания в файл
                 SaveReminders();
             }
         }
 
+
+
+
+        private void ReminderTimePicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AddButton.IsEnabled = !string.IsNullOrWhiteSpace(InputTextBox.Text);
+        }
+
+
+
+        private void HistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (File.Exists(HistoryFilePath))
+            {
+                string historyContent = File.ReadAllText(HistoryFilePath);
+                MessageBox.Show(historyContent, "История удаленных напоминаний", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("История пуста.", "История", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+
         private void InputTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (InputTextBox != null && AddButton != null) // Проверяем, что элементы существуют
-            {
-                // Активируем кнопку "Добавить", если в поле ввода есть текст
-                AddButton.IsEnabled = !string.IsNullOrWhiteSpace(InputTextBox.Text);
-            }
+            AddButton.IsEnabled = !string.IsNullOrWhiteSpace(InputTextBox.Text);
         }
 
         private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            // Добавляем напоминание по нажатию Enter
             if (e.Key == Key.Enter && AddButton.IsEnabled)
             {
                 AddButton_Click(sender, e);
             }
         }
-
-        private void RemindersList_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter && DeleteButton.IsEnabled)
-            {
-                DeleteButton_Click(sender, e);
-            }
-        }
-
-        private void ReminderTimePicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Активируем кнопку "Добавить", если в поле ввода есть текст
-            if (InputTextBox != null && AddButton != null)
-            {
-                AddButton.IsEnabled = !string.IsNullOrWhiteSpace(InputTextBox.Text);
-            }
-        }
-
-        private void RemindersList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Активируем кнопку "Удалить", если выбрано напоминание
-            if (DeleteButton != null)
-            {
-                DeleteButton.IsEnabled = RemindersList.SelectedItem != null;
-            }
-        }
-
-        private void SaveReminders()
-        {
-            // Загружаем все напоминания из файла
-            List<string> allReminders = File.Exists(FilePath) ? new List<string>(File.ReadAllLines(FilePath)) : new List<string>();
-
-            // Удаляем старые напоминания для текущей даты
-            DateTime selectedDate = ReminderDatePicker.SelectedDate ?? DateTime.Today;
-            allReminders.RemoveAll(r => ExtractDate(r).Date == selectedDate.Date);
-
-            // Добавляем новые напоминания
-            foreach (var item in RemindersList.Items)
-            {
-                allReminders.Add(item.ToString());
-            }
-
-            // Сохраняем обновленный список в файл
-            File.WriteAllLines(FilePath, allReminders);
-        }
-
-
-
-
-
-        private List<string> LoadReminders()
-        {
-            if (File.Exists(FilePath))
-            {
-                List<string> reminders = new List<string>(File.ReadAllLines(FilePath));
-                reminders.Sort(CompareReminders); // Сортируем перед фильтрацией
-                return reminders;
-            }
-            return new List<string>();
-        }
-
-
-
-
-
-        private int CompareReminders(string x, string y)
-        {
-            return ExtractDate(x).CompareTo(ExtractDate(y));
-        }
-
-        private DateTime ExtractDate(string reminder)
-        {
-            string[] parts = reminder.Split(new[] { ' ' }, 3); // Берем первые 2 части (дата + время)
-            string dateString = parts[0]; // Дата
-            string timeString = parts.Length > 1 && parts[1].Contains(":") ? parts[1] : "00:00"; // Время или 00:00
-
-            if (DateTime.TryParse($"{dateString} {timeString}", out DateTime dateTime))
-            {
-                return dateTime;
-            }
-
-            return DateTime.MaxValue;
-        }
-
-
-
-        private void ApplyDateFilter(List<string> allReminders)
-        {
-            RemindersList.Items.Clear();
-            DateTime selectedDate = ReminderDatePicker.SelectedDate ?? DateTime.Today;
-
-            foreach (var reminder in allReminders)
-            {
-                if (ExtractDate(reminder).Date == selectedDate.Date) // Фильтруем по дате
-                {
-                    RemindersList.Items.Add(reminder);
-                }
-            }
-        }
-
-
-        private void ReminderDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
-        {
-            List<string> reminders = LoadReminders(); // Загружаем список из файла
-            ApplyDateFilter(reminders); // Применяем фильтр по дате
-        }
-
-
-
-        private void ShowAllButton_Click(object sender, RoutedEventArgs e)
-        {
-            RemindersList.Items.Clear();
-            List<string> reminders = LoadReminders();
-
-            foreach (var reminder in reminders)
-            {
-                RemindersList.Items.Add(reminder);
-            }
-        }
-
-
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
@@ -198,29 +170,68 @@ namespace remin
                 if (result == MessageBoxResult.Yes)
                 {
                     string deletedReminder = RemindersList.SelectedItem.ToString();
-                    RemindersList.Items.Remove(RemindersList.SelectedItem);
+
+                    // Удаляем из ObservableCollection
+                    Reminders.Remove(deletedReminder);
+
+                    // Сохраняем новый список в файл
                     SaveReminders();
-                    SaveToHistory(deletedReminder); // Сохраняем в историю
+
+                    // Добавляем в историю
+                    SaveToHistory(deletedReminder);
+
+                    // Применяем фильтр, чтобы обновился список
+                    ApplyDateFilter();
                 }
             }
         }
-        private void SaveToHistory(string reminder)
+
+
+
+        private void SaveReminders() => File.WriteAllLines(FilePath, Reminders);
+
+        private void LoadReminders()
         {
-            File.AppendAllText(HistoryFilePath, reminder + Environment.NewLine);
+            if (File.Exists(FilePath))
+            {
+                Reminders.Clear();
+                var reminders = File.ReadAllLines(FilePath);
+                foreach (var reminder in reminders)
+                {
+                    Reminders.Add(reminder);
+                }
+
+                // Обновляем список
+                RemindersList.ItemsSource = null;
+                RemindersList.ItemsSource = Reminders;
+            }
         }
 
-        private void HistoryButton_Click(object sender, RoutedEventArgs e)
+
+
+        private void SaveToHistory(string reminder) => File.AppendAllText(HistoryFilePath, reminder + Environment.NewLine);
+
+        private void ShowAllButton_Click(object sender, RoutedEventArgs e)
         {
-            if (File.Exists(HistoryFilePath))
-            {
-                string history = File.ReadAllText(HistoryFilePath);
-                MessageBox.Show(history, "История удаленных напоминаний", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else
-            {
-                MessageBox.Show("История пуста.", "История", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            ReminderDatePicker.SelectedDate = null; // Сбрасываем дату, показываем все записи
+            RemindersList.ItemsSource = Reminders;
         }
 
+
+        private void ReminderDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ApplyDateFilter();
+        }
+
+        private void ApplyDateFilter()
+        {
+            var selectedDate = ReminderDatePicker.SelectedDate?.ToString("dd.MM.yyyy");
+            RemindersList.ItemsSource = selectedDate == null ? Reminders : new ObservableCollection<string>(Reminders.Where(r => r.StartsWith(selectedDate)));
+        }
+
+        private void RemindersList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DeleteButton.IsEnabled = RemindersList.SelectedItem != null;
+        }
     }
 }
