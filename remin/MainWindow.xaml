@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Восемь секунд" Height="820" Width="670">
 
-    <Grid Background="#FF8C8CA7">
+    <Grid Background="#FF638284">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -13,22 +13,34 @@
         </Grid.RowDefinitions>
 
         <!-- Поле ввода текста напоминания -->
-        <TextBox x:Name="InputTextBox" Width="650" 
+        <TextBox x:Name="InputTextBox" Width="634" 
                  Margin="0,16,0,10" HorizontalAlignment="Center"
                  TextChanged="InputTextBox_TextChanged"
-                 KeyDown="InputTextBox_KeyDown" Height="25" Background="#FFFFEDED"/>
+                 KeyDown="InputTextBox_KeyDown" Height="28" Background="#FFFFEDED"/>
 
         <!-- Выбор даты и времени -->
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" Width="370">
             <DatePicker x:Name="ReminderDatePicker"
                         Width="120"
                         Margin="10"
-                        SelectedDateChanged="ReminderDatePicker_SelectedDateChanged"/>
+                        SelectedDateChanged="ReminderDatePicker_SelectedDateChanged" Foreground="#FF312F2F" FontSize="14">
+                <DatePicker.Background>
+                    <ImageBrush/>
+                </DatePicker.Background>
+                <DatePicker.BorderBrush>
+                    <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1">
+                        <GradientStop Color="#FFA3AEB9"/>
+                        <GradientStop Color="#FF8399A9" Offset="0.375"/>
+                        <GradientStop Color="#FF718597" Offset="0.375"/>
+                        <GradientStop Color="#FF3D6786" Offset="1"/>
+                    </LinearGradientBrush>
+                </DatePicker.BorderBrush>
+            </DatePicker>
 
             <ComboBox x:Name="ReminderTimePicker"
                       Width="100"
                       Margin="10"
-                      SelectionChanged="ReminderTimePicker_SelectionChanged">
+                      SelectionChanged="ReminderTimePicker_SelectionChanged" Background="Black">
                 <ComboBoxItem Content="--:--"/>
                 <ComboBoxItem Content="08:30"/>
                 <ComboBoxItem Content="09:00"/>
@@ -47,7 +59,7 @@
         </StackPanel>
 
         <!-- Кнопки -->
-        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Width="318" Margin="0,0,0,20">
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Width="321" Margin="0,4,0,14">
             <Button x:Name="AddButton" Content="Добавить" Width="100" Height="30"
                     Click="AddButton_Click" IsEnabled="False" RenderTransformOrigin="0.97,-0.932"/>
             <Button x:Name="DeleteButton" Content="Удалить" Width="100" Height="30"
@@ -55,22 +67,37 @@
             <Button x:Name="HistoryButton" Content="История" Width="100" Height="30"
                     Click="HistoryButton_Click" Margin="10,0,0,0"/>
         </StackPanel>
+
+        <!-- Кнопка очистки истории -->
+        <Button x:Name="ClearHistoryButton" Content="cl history"
+        Width="59" 
+        Click="ClearHistoryButton_Click"
+        HorizontalAlignment="Left" Margin="584,10,0,10" Grid.Row="1" Background="#FFE48B8B" BorderBrush="#FFFFF504"/>
+
         <!-- Список напоминаний -->
-        <!-- <ListBox x:Name="RemindersList" ItemsSource="{Binding Reminders}" 
-   Margin="26,18,26,21" SelectionChanged="RemindersList_SelectionChanged" Grid.Row="3"/>-->
         <ListBox x:Name="RemindersList" ItemsSource="{Binding Reminders}" 
-         Margin="10,10,10,10" SelectionChanged="RemindersList_SelectionChanged" Grid.Row="3">
+         Margin="10,10,10,10" SelectionChanged="RemindersList_SelectionChanged" Grid.Row="3" Background="#FFF1F1F1">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="Gray" BorderThickness="1" Padding="5" Margin="5">
-                        <StackPanel>
-                            <TextBox Text="{Binding .}" 
+
+                    <StackPanel>
+                        <StackPanel.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFD2D2D2"/>
+                                <GradientStop Color="White" Offset="1"/>
+                            </LinearGradientBrush>
+                        </StackPanel.Background>
+                        <TextBox Text="{Binding .}" 
                              IsReadOnly="True" 
                              Background="Transparent"
+                             FontSize="16"
                              BorderThickness="0"
                              TextWrapping="Wrap"/>
-                        </StackPanel>
-                    </Border>
+                        <Border BorderBrush="#FF08465B" BorderThickness="0,0,0,1" Margin="5"/>
+                    </StackPanel>
+
+
+
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

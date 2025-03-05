@@ -12,8 +12,6 @@ D:\visual\repos\remin\remin\obj\Debug\remin.csproj.GenerateResource.cache
 D:\visual\repos\remin\remin\obj\Debug\remin.csproj.CoreCompileInputs.cache
 D:\visual\repos\remin\remin\obj\Debug\remin.exe
 D:\visual\repos\remin\remin\obj\Debug\remin.pdb
-F:\visual\repos\remin\bin\Debug\remin.exe
-F:\visual\repos\remin\bin\Debug\remin.pdb
 F:\visual\repos\remin\obj\Debug\remin.csproj.AssemblyReference.cache
 F:\visual\repos\remin\obj\Debug\App.baml
 F:\visual\repos\remin\obj\Debug\MainWindow.baml
@@ -24,5 +22,16 @@ F:\visual\repos\remin\obj\Debug\remin.g.resources
 F:\visual\repos\remin\obj\Debug\remin.Properties.Resources.resources
 F:\visual\repos\remin\obj\Debug\remin.csproj.GenerateResource.cache
 F:\visual\repos\remin\obj\Debug\remin.csproj.CoreCompileInputs.cache
+F:\visual\repos\remin\bin\Debug\remin.exe
+F:\visual\repos\remin\bin\Debug\remin.pdb
+F:\visual\repos\remin\bin\Debug\System.Reactive.dll
+F:\visual\repos\remin\bin\Debug\System.Reactive.Windows.Forms.dll
+F:\visual\repos\remin\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+F:\visual\repos\remin\bin\Debug\System.Threading.Tasks.Extensions.dll
+F:\visual\repos\remin\bin\Debug\System.Reactive.xml
+F:\visual\repos\remin\bin\Debug\System.Reactive.Windows.Forms.xml
+F:\visual\repos\remin\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+F:\visual\repos\remin\bin\Debug\System.Threading.Tasks.Extensions.xml
+F:\visual\repos\remin\obj\Debug\remin.csproj.Up2Date
 F:\visual\repos\remin\obj\Debug\remin.exe
 F:\visual\repos\remin\obj\Debug\remin.pdb

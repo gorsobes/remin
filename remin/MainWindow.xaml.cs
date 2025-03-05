@@ -7,8 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 
-
-
 namespace remin
 {
     public partial class MainWindow : Window
@@ -20,10 +18,10 @@ namespace remin
 
         private DispatcherTimer reminderTimer = new DispatcherTimer();
 
+
         public MainWindow()
         {
             InitializeComponent();
-
             reminderTimer.Interval = TimeSpan.FromMinutes(1); // Проверять каждую минуту
             reminderTimer.Tick += ReminderTimer_Tick;
             reminderTimer.Start();
@@ -53,6 +51,8 @@ namespace remin
                 }
             }
         }
+
+
 
         private void ShowReminderWindow(string reminderText)
         {
@@ -154,13 +154,14 @@ namespace remin
             AddButton.IsEnabled = !string.IsNullOrWhiteSpace(InputTextBox.Text);
         }
 
-        private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
+        private void InputTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && AddButton.IsEnabled)
+            if (e.Key == System.Windows.Input.Key.Enter && AddButton.IsEnabled)
             {
                 AddButton_Click(sender, e);
             }
         }
+
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
@@ -233,5 +234,28 @@ namespace remin
         {
             DeleteButton.IsEnabled = RemindersList.SelectedItem != null;
         }
+
+        private void ClearHistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (File.Exists(HistoryFilePath))
+            {
+                MessageBoxResult result = MessageBox.Show(
+                    "Вы уверены, что хотите очистить историю?",
+                    "Подтверждение",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    File.WriteAllText(HistoryFilePath, string.Empty); // Очищаем файл истории
+                    MessageBox.Show("История удалена.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("История уже пуста.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
     }
 }
