@@ -50,8 +50,26 @@ namespace remin
                     }
                 }
             }
-        }
+        } 
 
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+             if (e.Key == Key.Enter && DeleteButton.IsEnabled) // Проверяем, активна ли кнопка
+             {
+                DeleteButton.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent)); // Вызываем клик
+             }
+         }
+
+
+    private void RemindersList_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is TextBox textBox && textBox.DataContext is string reminder)
+            {
+                RemindersList.SelectedItem = reminder; // Устанавливаем выбранный элемент
+                DeleteButton.IsEnabled = true; // Активируем кнопку "Удалить"
+            }
+        }
 
 
         private void ShowReminderWindow(string reminderText)
