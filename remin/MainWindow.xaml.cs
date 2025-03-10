@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace remin
 {
@@ -41,6 +42,7 @@ namespace remin
             foreach (var reminder in Reminders.ToList()) // Перебираем все задания
             {
                 string[] parts = reminder.Split(' ');
+                
                 if (parts.Length >= 3)
                 {
                     string reminderTime = parts[1]; // Время напоминания
@@ -124,10 +126,12 @@ namespace remin
                 string text = InputTextBox.Text;
                 string date = ReminderDatePicker.SelectedDate?.ToString("dd.MM.yyyy") ?? DateTime.Today.ToString("dd.MM.yyyy");
                 string time = ReminderTimePicker.SelectedItem is ComboBoxItem selectedItem && selectedItem.Content.ToString() != "--:--"
-                              ? selectedItem.Content.ToString()
-                              : "00:00";
+                      ? selectedItem.Content.ToString()
+                      : null; // Убираем "00:00", если время не выбрано
 
-                string reminder = $"{date} {time} {text}";
+                string reminder = time != null ? $"{date} {time} {text}" : $"{date} {text}";
+
+
                 Reminders.Add(reminder);
 
                 // Обновляем список (чтобы данные добавились в коллекцию)

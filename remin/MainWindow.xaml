@@ -52,6 +52,7 @@
                 <ComboBoxItem Content="14:10"/>
                 <ComboBoxItem Content="15:00"/>
                 <ComboBoxItem Content="15:15"/>
+                <ComboBoxItem Content="16:15"/>
                 <ComboBoxItem Content="17:30"/>
             </ComboBox>
 
