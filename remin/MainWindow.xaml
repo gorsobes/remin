@@ -62,6 +62,7 @@
                 <ComboBoxItem Content="14:00"/>
                 <ComboBoxItem Content="14:30"/>
                 <ComboBoxItem Content="15:00"/>
+                <ComboBoxItem Content="15:11"/>
                 <ComboBoxItem Content="16:00"/>
                 <ComboBoxItem Content="17:00"/>
             </ComboBox>
@@ -128,7 +129,7 @@
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="#fffbbb"/>
                                 <!-- Голубой пастельный -->
-                                <GradientStop Color="White" Offset="1"/>
+                                <GradientStop Color="White" Offset="0.8"/>
                             </LinearGradientBrush>
                         </StackPanel.Background>
 
