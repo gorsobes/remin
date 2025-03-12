@@ -35,3 +35,7 @@ F:\visual\repos\remin\bin\Debug\System.Threading.Tasks.Extensions.xml
 F:\visual\repos\remin\obj\Debug\remin.csproj.Up2Date
 F:\visual\repos\remin\obj\Debug\remin.exe
 F:\visual\repos\remin\obj\Debug\remin.pdb
+F:\visual\repos\remin\bin\Debug\remin.exe.manifest
+F:\visual\repos\remin\bin\Debug\remin.application
+F:\visual\repos\remin\obj\Debug\remin.exe.manifest
+F:\visual\repos\remin\obj\Debug\remin.application

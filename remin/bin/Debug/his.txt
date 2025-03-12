@@ -1,0 +1,497 @@
+<Window x:Class="remin.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Восемь секунд" Height="820" Width="670"
+        KeyDown="Window_KeyDown">
+
+    <Grid Background="#FF638284">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MinHeight="92"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Поле ввода текста напоминания -->
+        <TextBox x:Name="InputTextBox" Width="634" 
+                 Margin="0,16,0,10" HorizontalAlignment="Center"
+                 TextChanged="InputTextBox_TextChanged"
+                 KeyDown="InputTextBox_KeyDown" Height="28" Background="#FFFFEDED"/>
+
+        <!-- Выбор даты и времени -->
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" Width="370">
+            <DatePicker x:Name="ReminderDatePicker"
+                        Width="120"
+                        Margin="10"
+                        SelectedDateChanged="ReminderDatePicker_SelectedDateChanged" Foreground="#FF312F2F" FontSize="14">
+                <DatePicker.Background>
+                    <ImageBrush/>
+                </DatePicker.Background>
+                <DatePicker.BorderBrush>
+                    <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1">
+                        <GradientStop Color="#FFA3AEB9"/>
+                        <GradientStop Color="#FF8399A9" Offset="0.375"/>
+                        <GradientStop Color="#FF718597" Offset="0.375"/>
+                        <GradientStop Color="#FF3D6786" Offset="1"/>
+                    </LinearGradientBrush>
+                </DatePicker.BorderBrush>
+            </DatePicker>
+
+            <ComboBox x:Name="ReminderTimePicker"
+                      Width="100"
+                      Margin="10"
+                      SelectionChanged="ReminderTimePicker_SelectionChanged" Background="Black">
+                <ComboBoxItem Content="--:--"/>
+                <ComboBoxItem Content="08:30"/>
+                <ComboBoxItem Content="09:00"/>
+                <ComboBoxItem Content="09:30"/>
+                <ComboBoxItem Content="10:00"/>
+                <ComboBoxItem Content="10:30"/>
+                <ComboBoxItem Content="11:00"/>
+                <ComboBoxItem Content="11:30"/>
+                <ComboBoxItem Content="12:00"/>
+                <ComboBoxItem Content="12:30"/>
+                <ComboBoxItem Content="14:00"/>
+                <ComboBoxItem Content="14:30"/>
+                <ComboBoxItem Content="15:00"/>
+                <ComboBoxItem Content="16:00"/>
+                <ComboBoxItem Content="17:00"/>
+            </ComboBox>
+
+            <Button x:Name="ShowAllButton" Content="Показать всё" Width="100" Height="30"
+                    Click="ShowAllButton_Click" Margin="10,0,0,0"/>
+        </StackPanel>
+
+        <!-- Кнопки -->
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Width="321" Margin="0,4,0,14">
+            <Button x:Name="AddButton" Content="Добавить" Width="100" Height="30"
+                    Click="AddButton_Click" IsEnabled="False" RenderTransformOrigin="0.97,-0.932"/>
+            <Button x:Name="DeleteButton" Content="Удалить" Width="100" Height="30"
+                    Click="DeleteButton_Click" IsEnabled="False" Margin="10,0,0,0"/>
+            <Button x:Name="HistoryButton" Content="История" Width="100" Height="30"
+                    Click="HistoryButton_Click" Margin="10,0,0,0"/>
+        </StackPanel>
+
+        <!-- Кнопка очистки истории -->
+        <Button x:Name="ClearHistoryButton" Content="cl history"
+        Width="59" 
+        Click="ClearHistoryButton_Click"
+        HorizontalAlignment="Left" Margin="584,10,0,10" Grid.Row="1" Background="#FFE48B8B" BorderBrush="#FFFFF504"/>
+
+        <!-- Список напоминаний -->
+        <ListBox x:Name="RemindersList" ItemsSource="{Binding Reminders}" 
+         Margin="10,10,10,10" SelectionChanged="RemindersList_SelectionChanged" Grid.Row="3" Background="#FFF1F1F1">
+
+            <ListBox.Resources>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Padding" Value="5"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <Border Name="Border" Background="{TemplateBinding Background}" Padding="5">
+                                    <ContentPresenter/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <!-- При наведении мышки -->
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="#FF638284"/>
+                                    </Trigger>
+                                    <!-- При выборе элемента -->
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="#999"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.Resources>
+
+
+
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+
+                    <StackPanel>
+                        <StackPanel.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#fffbbb"/>
+                                <!-- Голубой пастельный -->
+                                <GradientStop Color="White" Offset="1"/>
+                            </LinearGradientBrush>
+                        </StackPanel.Background>
+
+                        <!-- Оборачиваем TextBox в Border для применения эффекта тени -->
+                        <Border Padding="2" CornerRadius="5">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#999999" Opacity="1" BlurRadius="8" Direction="315" ShadowDepth="2"/>
+                            </Border.Effect>
+
+                            <TextBox Text="{Binding .}" 
+                 IsReadOnly="True" 
+                 Background="Transparent"
+                 FontSize="20"
+                 BorderThickness="0"
+                 Foreground="Black"
+                 TextWrapping="Wrap"
+                 PreviewMouseDown="RemindersList_PreviewMouseDown"/>
+                        </Border>
+                    </StackPanel>
+
+
+
+
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+
+    </Grid>
+</Window>
+
+using System;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Threading;
+using static System.Net.Mime.MediaTypeNames;
+
+namespace remin
+{
+    public partial class MainWindow : Window
+    {
+        private const string FilePath = "reminders.txt";
+        private const string HistoryFilePath = "history.txt";
+
+        public ObservableCollection<string> Reminders { get; set; } = new ObservableCollection<string>();
+
+        private DispatcherTimer reminderTimer = new DispatcherTimer();
+
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            reminderTimer.Interval = TimeSpan.FromMinutes(1); // Проверять каждую минуту
+            reminderTimer.Tick += ReminderTimer_Tick;
+            reminderTimer.Start();
+
+            Reminders = new ObservableCollection<string>(); // Инициализация коллекции
+            DataContext = this; // Установка контекста данных
+            ReminderDatePicker.SelectedDate = DateTime.Today; // Устанавливаем текущую дату
+            LoadReminders(); // Загружаем напоминания
+            ApplyDateFilter(); // Фильтруем сразу после загрузки
+        }
+
+
+        private void ReminderTimer_Tick(object sender, EventArgs e)
+        {
+            string currentTime = DateTime.Now.ToString("HH:mm"); // Текущее время
+
+            foreach (var reminder in Reminders.ToList()) // Перебираем все задания
+            {
+                string[] parts = reminder.Split(' ');
+                
+                if (parts.Length >= 3)
+                {
+                    string reminderTime = parts[1]; // Время напоминания
+                    if (reminderTime == currentTime && reminderTime != "00:00")
+                    {
+                        ShowReminderWindow(reminder);
+                    }
+                }
+            }
+        } 
+
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+             if (e.Key == Key.Enter && DeleteButton.IsEnabled) // Проверяем, активна ли кнопка
+             {
+                DeleteButton.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent)); // Вызываем клик
+             }
+         }
+
+
+    private void RemindersList_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is TextBox textBox && textBox.DataContext is string reminder)
+            {
+                RemindersList.SelectedItem = reminder; // Устанавливаем выбранный элемент
+                DeleteButton.IsEnabled = true; // Активируем кнопку "Удалить"
+            }
+        }
+
+
+        private void ShowReminderWindow(string reminderText)
+        {
+            Window reminderWindow = new Window
+            {
+                Title = "Напоминание!",
+                Width = 350,
+                Height = 450,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                Topmost = true // Поверх всех окон
+            };
+
+            StackPanel panel = new StackPanel { Margin = new Thickness(10) };
+            panel.Children.Add(new TextBlock { Text = reminderText, TextWrapping = TextWrapping.Wrap });
+
+            Button closeButton = new Button { Content = "Закрыть", Margin = new Thickness(5) };
+            closeButton.Click += (s, e) => reminderWindow.Close();
+
+            Button snoozeButton = new Button { Content = "Отложить на 15 минут", Margin = new Thickness(5) };
+            snoozeButton.Click += (s, e) =>
+            {
+                reminderWindow.Close();
+                SnoozeReminder(reminderText);
+            };
+
+            panel.Children.Add(closeButton);
+            panel.Children.Add(snoozeButton);
+            reminderWindow.Content = panel;
+
+            reminderWindow.ShowDialog();
+        }
+
+        private void SnoozeReminder(string reminderText)
+        {
+            string[] parts = reminderText.Split(' ');
+            if (parts.Length >= 3 && DateTime.TryParse(parts[1], out DateTime originalTime))
+            {
+                DateTime newTime = originalTime.AddMinutes(15);
+                string newReminder = $"{parts[0]} {newTime:HH:mm} {string.Join(" ", parts.Skip(2))}";
+
+                Reminders.Add(newReminder);
+                SaveReminders();
+            }
+        }
+
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(InputTextBox.Text))
+            {
+                string text = InputTextBox.Text;
+                string date = ReminderDatePicker.SelectedDate?.ToString("dd.MM.yyyy") ?? DateTime.Today.ToString("dd.MM.yyyy");
+                string time = ReminderTimePicker.SelectedItem is ComboBoxItem selectedItem && selectedItem.Content.ToString() != "--:--"
+                      ? selectedItem.Content.ToString()
+                      : null; // Убираем "00:00", если время не выбрано
+
+                string reminder = time != null ? $"{date} {time} {text}" : $"{date} {text}";
+
+
+                Reminders.Add(reminder);
+
+                // Обновляем список (чтобы данные добавились в коллекцию)
+                RemindersList.ItemsSource = null;
+                RemindersList.ItemsSource = Reminders;
+
+                // Применяем фильтр, чтобы показывались только задачи на выбранную дату
+                ApplyDateFilter();
+
+                InputTextBox.Clear();
+                AddButton.IsEnabled = false;
+                SaveReminders();
+            }
+        }
+
+
+
+
+        private void ReminderTimePicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AddButton.IsEnabled = !string.IsNullOrWhiteSpace(InputTextBox.Text);
+        }
+
+
+
+        private void HistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (File.Exists(HistoryFilePath))
+            {
+                string historyContent = File.ReadAllText(HistoryFilePath);
+                MessageBox.Show(historyContent, "История удаленных напоминаний", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("История пуста.", "История", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+
+        private void InputTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            AddButton.IsEnabled = !string.IsNullOrWhiteSpace(InputTextBox.Text);
+        }
+
+        private void InputTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter && AddButton.IsEnabled)
+            {
+                AddButton_Click(sender, e);
+            }
+        }
+
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (RemindersList.SelectedItem != null)
+            {
+                MessageBoxResult result = MessageBox.Show("Точно удалить?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
+                {
+                    string deletedReminder = RemindersList.SelectedItem.ToString();
+
+                    // Удаляем из ObservableCollection
+                    Reminders.Remove(deletedReminder);
+
+                    // Сохраняем новый список в файл
+                    SaveReminders();
+
+                    // Добавляем в историю
+                    SaveToHistory(deletedReminder);
+
+                    // Применяем фильтр, чтобы обновился список
+                    ApplyDateFilter();
+                }
+            }
+        }
+
+
+
+        private void SaveReminders() => File.WriteAllLines(FilePath, Reminders);
+
+        private void LoadReminders()
+        {
+            if (File.Exists(FilePath))
+            {
+                Reminders.Clear();
+                var reminders = File.ReadAllLines(FilePath);
+                foreach (var reminder in reminders)
+                {
+                    Reminders.Add(reminder);
+                }
+
+                // Обновляем список
+                RemindersList.ItemsSource = null;
+                RemindersList.ItemsSource = Reminders;
+            }
+        }
+
+
+
+        private void SaveToHistory(string reminder) => File.AppendAllText(HistoryFilePath, reminder + Environment.NewLine);
+
+        private void ShowAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            ReminderDatePicker.SelectedDate = null; // Сбрасываем дату, показываем все записи
+            RemindersList.ItemsSource = Reminders;
+        }
+
+
+        private void ReminderDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ApplyDateFilter();
+        }
+
+        private void ApplyDateFilter()
+        {
+            var selectedDate = ReminderDatePicker.SelectedDate?.ToString("dd.MM.yyyy");
+            RemindersList.ItemsSource = selectedDate == null ? Reminders : new ObservableCollection<string>(Reminders.Where(r => r.StartsWith(selectedDate)));
+        }
+
+        private void RemindersList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DeleteButton.IsEnabled = RemindersList.SelectedItem != null;
+        }
+
+        private void ClearHistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (File.Exists(HistoryFilePath))
+            {
+                MessageBoxResult result = MessageBox.Show(
+                    "Вы уверены, что хотите очистить историю?",
+                    "Подтверждение",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    File.WriteAllText(HistoryFilePath, string.Empty); // Очищаем файл истории
+                    MessageBox.Show("История удалена.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("История уже пуста.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+    }
+}
+
+<Application x:Class="remin.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+
+
+
+        <!-- 🔹 Стиль для списка напоминаний (ListBox) -->
+        <Style TargetType="ListBox">
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#369"/>
+            <Setter Property="Background" Value="#986"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+
+        <!-- 🔹 Стиль для элементов списка (ListBoxItem) -->
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#369"/>
+            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+            <!-- Горизонтальная линия -->
+        </Style>
+        <!-- 🔹 Стиль для текстовых блоков (TextBlock) -->
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+
+    </Application.Resources>
+</Application>
+
+
+using System.Windows;
+using System;
+
+namespace remin
+{
+    public partial class App : Application
+    {
+        [STAThread] // Указывает, что приложение использует однопоточную модель (STA)
+        public static void Main()
+        {
+            // Создаем экземпляр приложения
+            App app = new App();
+
+            // Инициализируем компоненты (например, загружаем XAML)
+            app.InitializeComponent();
+
+            // Запускаем приложение
+            app.Run();
+        }
+    }
+}
