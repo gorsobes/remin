@@ -5,6 +5,7 @@
         KeyDown="Window_KeyDown"
         WindowStartupLocation="CenterScreen">
 
+   
     <Grid>
         <Grid.Background>
             <RadialGradientBrush>
@@ -87,8 +88,9 @@
         Click="ClearHistoryButton_Click"
         HorizontalAlignment="Left" Margin="584,10,0,10" Grid.Row="1" Background="#FFE48B8B" BorderBrush="#FFFFF504"/>
 
+
         <!-- Список напоминаний -->
-        <ListBox x:Name="RemindersList" ItemsSource="{Binding Reminders}" 
+        <ListBox x:Name="RemindersList" ItemsSource="{Binding Reminders}"
          Margin="10,10,10,10" SelectionChanged="RemindersList_SelectionChanged" Grid.Row="3" Background="#FFF1F1F1">
 
             <ListBox.Resources>
@@ -96,6 +98,7 @@
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="BorderThickness" Value="0"/>
                     <Setter Property="Padding" Value="5"/>
+                    <Setter Property="Cursor" Value="Hand"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListBoxItem">
@@ -146,6 +149,7 @@
                  BorderThickness="0"
                  Foreground="Black"
                  TextWrapping="Wrap"
+                 Cursor="Hand"
                  PreviewMouseDown="RemindersList_PreviewMouseDown"/>
                         </Border>
                     </StackPanel>
