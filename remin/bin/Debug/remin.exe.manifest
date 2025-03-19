@@ -43,14 +43,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="remin.exe" size="305112">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Hardcodet.NotifyIcon.Wpf.dll" size="117760">
+      <assemblyIdentity name="Hardcodet.NotifyIcon.Wpf" version="2.0.0.0" publicKeyToken="682384A853A08AAD" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>xvWgcaJzcGqDS/sPSZtKduUkcpfpTA32zoIXuwdPMyk=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="remin.exe" size="308696">
       <assemblyIdentity name="remin" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>FzRVF9ijEuI5Yo8JDrDHIKKrAyatqbqQ52Uo7Bi2GxI=</dsig:DigestValue>
+        <dsig:DigestValue>eueuQ7JErptgyZ2OqF6q0exmrh5L5TxLMPmO+CheGOo=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

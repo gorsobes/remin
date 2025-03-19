@@ -1,166 +1,217 @@
 ﻿<Window x:Class="remin.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Восемь секунд" Height="820" Width="670"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        Title="Восемь секунд" 
+        Height="820" 
+        Width="670"
         KeyDown="Window_KeyDown"
+        WindowStyle="None"
+        ResizeMode="CanResizeWithGrip"
         WindowStartupLocation="CenterScreen">
 
-   
+    <!-- WindowChrome для кастомного заголовка -->
+    <Window.Resources>
+        <Style TargetType="Window">
+            <Setter Property="shell:WindowChrome.WindowChrome">
+                <Setter.Value>
+                    <shell:WindowChrome
+                        ResizeBorderThickness="5"
+                        CaptionHeight="30"
+                        GlassFrameThickness="0"
+                        CornerRadius="0"
+                        UseAeroCaptionButtons="False"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Иконка в трее -->
+        <tb:TaskbarIcon
+            x:Key="TrayIcon"
+            IconSource="icon.ico"
+            ToolTipText="Восемь секунд"
+            Visibility="Visible">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Открыть" Click="ShowWindow_Click"/>
+                    <MenuItem Header="Выход" Click="Exit_Click"/>
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
+    </Window.Resources>
+
+    <!-- Основной контейнер -->
     <Grid>
-        <Grid.Background>
-            <RadialGradientBrush>
-                <GradientStop Color="#FF031E52"/>
-                <GradientStop Color="#FF117767" Offset="1"/>
-            </RadialGradientBrush>
-        </Grid.Background>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto" MinHeight="92"/>
-            <RowDefinition/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="30"/>
+            <!-- Заголовок -->
+            <RowDefinition Height="*"/>
+            <!-- Основное содержимое -->
         </Grid.RowDefinitions>
 
-        <!-- Поле ввода текста напоминания -->
-        <TextBox x:Name="InputTextBox" Width="634" 
-                 Margin="0,16,0,10" HorizontalAlignment="Center"
-                 TextChanged="InputTextBox_TextChanged"
-                 KeyDown="InputTextBox_KeyDown" Height="28" Background="#FFFFEDED"/>
+        <!-- Панель заголовка -->
+        <Border Grid.Row="0" Background="#FF117767" MouseLeftButtonDown="Border_MouseLeftButtonDown">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <!-- Кнопка сворачивания -->
+                <Button Content="─"
+                        Width="30"
+                        Height="30"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Foreground="White"
+                        Click="MinimizeButton_Click"/>
 
-        <!-- Выбор даты и времени -->
-        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" Width="370">
-            <DatePicker x:Name="ReminderDatePicker"
-                        Width="120"
-                        Margin="10"
-                        SelectedDateChanged="ReminderDatePicker_SelectedDateChanged" Foreground="#FF312F2F" FontSize="14">
-                <DatePicker.Background>
-                    <ImageBrush/>
-                </DatePicker.Background>
-                <DatePicker.BorderBrush>
-                    <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1">
-                        <GradientStop Color="#FFA3AEB9"/>
-                        <GradientStop Color="#FF8399A9" Offset="0.375"/>
-                        <GradientStop Color="#FF718597" Offset="0.375"/>
-                        <GradientStop Color="#FF3D6786" Offset="1"/>
-                    </LinearGradientBrush>
-                </DatePicker.BorderBrush>
-            </DatePicker>
+                <!-- Кнопка развернуть/свернуть -->
+                <Button Content="□"
+                        Width="30"
+                        Height="30"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Foreground="White"
+                        Click="MaximizeButton_Click"/>
+            </StackPanel>
+        </Border>
 
-            <ComboBox x:Name="ReminderTimePicker"
-                      Width="100"
-                      Margin="10"
-                      SelectionChanged="ReminderTimePicker_SelectionChanged" Background="Black">
-                <ComboBoxItem Content="--:--"/>
-                <ComboBoxItem Content="08:30"/>
-                <ComboBoxItem Content="09:00"/>
-                <ComboBoxItem Content="09:30"/>
-                <ComboBoxItem Content="10:00"/>
-                <ComboBoxItem Content="10:30"/>
-                <ComboBoxItem Content="11:00"/>
-                <ComboBoxItem Content="11:30"/>
-                <ComboBoxItem Content="12:00"/>
-                <ComboBoxItem Content="12:30"/>
-                <ComboBoxItem Content="14:00"/>
-                <ComboBoxItem Content="14:30"/>
-                <ComboBoxItem Content="15:00"/>
-                <ComboBoxItem Content="15:11"/>
-                <ComboBoxItem Content="16:00"/>
-                <ComboBoxItem Content="17:00"/>
-            </ComboBox>
+        <!-- Основное содержимое окна -->
+        <Grid Grid.Row="1">
+            <Grid.Background>
+                <RadialGradientBrush>
+                    <GradientStop Color="#FF031E52"/>
+                    <GradientStop Color="#FF117767" Offset="1"/>
+                </RadialGradientBrush>
+            </Grid.Background>
 
-            <Button x:Name="ShowAllButton" Content="Показать всё" Width="100" Height="30"
-                    Click="ShowAllButton_Click" Margin="10,0,0,0"/>
-        </StackPanel>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" MinHeight="92"/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <!-- Кнопки -->
-        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Width="321" Margin="0,4,0,14">
-            <Button x:Name="AddButton" Content="Добавить" Width="100" Height="30"
-                    Click="AddButton_Click" IsEnabled="False" RenderTransformOrigin="0.97,-0.932" BorderBrush="#FF707070" Background="#FFDDDDDD"/>
-            <Button x:Name="DeleteButton" Content="Удалить" Width="100" Height="30"
-                    Click="DeleteButton_Click" IsEnabled="False" Margin="10,0,0,0"/>
-            <Button x:Name="HistoryButton" Content="История" Width="100" Height="30"
-                    Click="HistoryButton_Click" Margin="10,0,0,0" Background="#FFDDDDDD"/>
-        </StackPanel>
+            <!-- Поле ввода текста напоминания -->
+            <TextBox x:Name="InputTextBox" Width="634"
+                     Margin="0,16,0,10" HorizontalAlignment="Center"
+                     TextChanged="InputTextBox_TextChanged"
+                     KeyDown="InputTextBox_KeyDown" Height="28" Background="#FFFFEDED"/>
 
-        <!-- Кнопка очистки истории -->
-        <Button x:Name="ClearHistoryButton" Content="cl history"
-        Width="59" 
-        Click="ClearHistoryButton_Click"
-        HorizontalAlignment="Left" Margin="584,10,0,10" Grid.Row="1" Background="#FFE48B8B" BorderBrush="#FFFFF504"/>
+            <!-- Выбор даты и времени -->
+            <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" Width="370">
+                <DatePicker x:Name="ReminderDatePicker"
+                            Width="120"
+                            Margin="10"
+                            SelectedDateChanged="ReminderDatePicker_SelectedDateChanged"
+                            Foreground="#FF312F2F"
+                            FontSize="14"/>
 
+                <ComboBox x:Name="ReminderTimePicker"
+                          Width="100"
+                          Margin="10"
+                          SelectionChanged="ReminderTimePicker_SelectionChanged"
+                          Background="Black">
+                    <ComboBoxItem Content="--:--"/>
+                    <ComboBoxItem Content="08:30"/>
+                    <ComboBoxItem Content="09:00"/>
+                    <ComboBoxItem Content="09:30"/>
+                    <ComboBoxItem Content="10:00"/>
+                    <ComboBoxItem Content="10:30"/>
+                    <ComboBoxItem Content="11:00"/>
+                    <ComboBoxItem Content="11:30"/>
+                    <ComboBoxItem Content="12:00"/>
+                    <ComboBoxItem Content="12:30"/>
+                    <ComboBoxItem Content="14:00"/>
+                    <ComboBoxItem Content="14:30"/>
+                    <ComboBoxItem Content="15:00"/>
+                    <ComboBoxItem Content="15:11"/>
+                    <ComboBoxItem Content="16:00"/>
+                    <ComboBoxItem Content="17:00"/>
+                </ComboBox>
 
-        <!-- Список напоминаний -->
-        <ListBox x:Name="RemindersList" ItemsSource="{Binding Reminders}"
-         Margin="10,10,10,10" SelectionChanged="RemindersList_SelectionChanged" Grid.Row="3" Background="#FFF1F1F1">
+                <Button x:Name="ShowAllButton" Content="Показать всё" Width="100" Height="30"
+                        Click="ShowAllButton_Click" Margin="10,0,0,0"/>
+            </StackPanel>
 
-            <ListBox.Resources>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Padding" Value="5"/>
-                    <Setter Property="Cursor" Value="Hand"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListBoxItem">
-                                <Border Name="Border" Background="{TemplateBinding Background}" Padding="5">
-                                    <ContentPresenter/>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <!-- При наведении мышки -->
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="Border" Property="Background" Value="#FF638284"/>
-                                    </Trigger>
-                                    <!-- При выборе элемента -->
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter TargetName="Border" Property="Background" Value="#999"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListBox.Resources>
+            <!-- Кнопки -->
+            <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Width="321" Margin="0,4,0,14">
+                <Button x:Name="AddButton" Content="Добавить" Width="100" Height="30"
+                        Click="AddButton_Click" IsEnabled="False" RenderTransformOrigin="0.97,-0.932"
+                        BorderBrush="#FF707070" Background="#FFDDDDDD"/>
+                <Button x:Name="DeleteButton" Content="Удалить" Width="100" Height="30"
+                        Click="DeleteButton_Click" IsEnabled="False" Margin="10,0,0,0"/>
+                <Button x:Name="HistoryButton" Content="История" Width="100" Height="30"
+                        Click="HistoryButton_Click" Margin="10,0,0,0" Background="#FFDDDDDD"/>
+            </StackPanel>
 
+            <!-- Кнопка очистки истории -->
+            <Button x:Name="ClearHistoryButton" Content="cl history"
+                    Width="59"
+                    Click="ClearHistoryButton_Click"
+                    HorizontalAlignment="Left" Margin="584,10,0,10"
+                    Grid.Row="1" Background="#FFE48B8B" BorderBrush="#FFFFF504"/>
 
+            <!-- Список напоминаний -->
+            <ListBox x:Name="RemindersList" ItemsSource="{Binding Reminders}"
+                     Margin="10,10,10,10"
+                     SelectionChanged="RemindersList_SelectionChanged"
+                     Grid.Row="3" Background="#FFF1F1F1">
 
+                <ListBox.Resources>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="5"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border Name="Border" Background="{TemplateBinding Background}" Padding="5">
+                                        <ContentPresenter/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Border" Property="Background" Value="#FF638284"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Border" Property="Background" Value="#999"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.Resources>
 
-            <ListBox.ItemTemplate>
-                <DataTemplate>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <StackPanel.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#fffbbb"/>
+                                    <GradientStop Color="White" Offset="0.8"/>
+                                </LinearGradientBrush>
+                            </StackPanel.Background>
 
-                    <StackPanel>
-                        <StackPanel.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#fffbbb"/>
-                                <!-- Голубой пастельный -->
-                                <GradientStop Color="White" Offset="0.8"/>
-                            </LinearGradientBrush>
-                        </StackPanel.Background>
+                            <Border Padding="2" CornerRadius="5">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#999999" Opacity="1" BlurRadius="8"
+                                                  Direction="315" ShadowDepth="2"/>
+                                </Border.Effect>
 
-                        <!-- Оборачиваем TextBox в Border для применения эффекта тени -->
-                        <Border Padding="2" CornerRadius="5">
-                            <Border.Effect>
-                                <DropShadowEffect Color="#999999" Opacity="1" BlurRadius="8" Direction="315" ShadowDepth="2"/>
-                            </Border.Effect>
-
-                            <TextBox Text="{Binding .}" 
-                 IsReadOnly="True" 
-                 Background="Transparent"
-                 FontSize="20"
-                 BorderThickness="0"
-                 Foreground="Black"
-                 TextWrapping="Wrap"
-                 Cursor="Hand"
-                 PreviewMouseDown="RemindersList_PreviewMouseDown"/>
-                        </Border>
-                    </StackPanel>
-
-
-
-
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-
-
+                                <TextBox Text="{Binding .}" 
+                                         IsReadOnly="True"
+                                         Background="Transparent"
+                                         FontSize="20"
+                                         BorderThickness="0"
+                                         Foreground="Black"
+                                         TextWrapping="Wrap"
+                                         Cursor="Hand"
+                                         PreviewMouseDown="RemindersList_PreviewMouseDown"/>
+                            </Border>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
     </Grid>
 </Window>

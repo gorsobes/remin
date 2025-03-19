@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hardcodet.Wpf.TaskbarNotification;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using static System.Net.Mime.MediaTypeNames;
+using System.Drawing;
+using System.Windows.Media.Imaging;
 
 namespace remin
 {
@@ -23,7 +26,31 @@ namespace remin
         public MainWindow()
         {
             InitializeComponent();
-            reminderTimer.Interval = TimeSpan.FromMinutes(1); // Проверять каждую минуту
+
+            // Добавляем обработчик двойного клика по иконке в трее
+            var taskbarIcon = (TaskbarIcon)this.FindResource("TrayIcon");
+
+            // Проверяем, что иконка загружена
+            if (taskbarIcon != null)
+            {
+                try
+                {
+                    Uri iconUri = new Uri("icon.ico", UriKind.RelativeOrAbsolute);
+                    taskbarIcon.IconSource = BitmapFrame.Create(iconUri);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка загрузки иконки: {ex.Message}");
+                }
+            }
+        
+            // Показ окна по двойному клику
+            
+
+        //Uri iconUri = new Uri("icon.ico", UriKind.RelativeOrAbsolute);
+        // taskbarIcon.IconSource = BitmapFrame.Create(iconUri);
+
+        reminderTimer.Interval = TimeSpan.FromMinutes(1); // Проверять каждую минуту
             reminderTimer.Tick += ReminderTimer_Tick;
             reminderTimer.Start();
 
@@ -34,6 +61,78 @@ namespace remin
             ApplyDateFilter(); // Фильтруем сразу после загрузки
         }
 
+        private void TaskbarIcon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
+        {
+            this.Show();
+            this.WindowState = WindowState.Normal;
+            this.Activate();
+            this.Topmost = true;
+            this.Topmost = false;
+            this.Focus();
+        }
+
+        // Закрытие окна — сворачиваем в трей
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true; // Отменяем стандартное закрытие
+            this.Hide();     // Скрываем окно
+                             // Показываем уведомление в трее (опционально)
+            var taskbarIcon = (TaskbarIcon)this.FindResource("TrayIcon");
+            taskbarIcon.ShowBalloonTip("Свернуто в трей", "Приложение продолжает работать в фоновом режиме.", BalloonIcon.Info);
+        }
+
+        // Показ окна при клике на пункт "Открыть"
+        private void ShowWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Minimized || !this.IsVisible)
+            {
+                this.Show();
+                this.WindowState = WindowState.Normal;
+                this.Activate(); // Окно становится активным
+                this.Topmost = true;
+                this.Topmost = false; // Снимаем принудительный Topmost
+                this.Focus(); // Перевод фокуса на окно
+            }
+            else
+            {
+                this.Activate(); // Если окно уже открыто, просто активируем его
+            }
+        }
+
+
+        // Завершение приложения при клике на "Выход"
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown(); // Полное завершение
+        }
+
+        // Сворачивание окна в трей при минимизации
+        protected override void OnStateChanged(EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+            { 
+            this.Hide(); // Скрываем окно
+            }
+            base.OnStateChanged(e);
+        }
+
+
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized; // Сворачиваем окно
+        }
+
+        private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.WindowState = WindowState.Normal; // Восстанавливаем размер
+            }
+            else
+            {
+                this.WindowState = WindowState.Maximized; // Разворачиваем на весь экран
+            }
+        }
 
         private void ReminderTimer_Tick(object sender, EventArgs e)
         {
@@ -147,7 +246,13 @@ namespace remin
             }
         }
 
-
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.DragMove(); // Перетаскивание окна
+            }
+        }
 
 
         private void ReminderTimePicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
