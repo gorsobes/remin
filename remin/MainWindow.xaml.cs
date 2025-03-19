@@ -37,6 +37,8 @@ namespace remin
                 {
                     Uri iconUri = new Uri("icon.ico", UriKind.RelativeOrAbsolute);
                     taskbarIcon.IconSource = BitmapFrame.Create(iconUri);
+                    // Подписываемся на событие двойного клика
+                    taskbarIcon.TrayMouseDoubleClick += TaskbarIcon_TrayMouseDoubleClick;
                 }
                 catch (Exception ex)
                 {
@@ -63,12 +65,19 @@ namespace remin
 
         private void TaskbarIcon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
         {
-            this.Show();
-            this.WindowState = WindowState.Normal;
-            this.Activate();
-            this.Topmost = true;
-            this.Topmost = false;
-            this.Focus();
+            if (this.WindowState == WindowState.Minimized || !this.IsVisible)
+            {
+                this.Show();
+                this.WindowState = WindowState.Normal;
+                this.Activate(); // Окно становится активным
+                this.Topmost = true;
+                this.Topmost = false; // Снимаем принудительный Topmost
+                this.Focus(); // Перевод фокуса на окно
+            }
+            else
+            {
+                this.Activate(); // Если окно уже открыто, просто активируем его
+            }
         }
 
         // Закрытие окна — сворачиваем в трей
