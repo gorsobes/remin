@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         xmlns:tb="http://www.hardcodet.net/taskbar"
-        Title="Восемь секунд" 
+        Title="Восемь секунд 🥷🏻" 
         Height="820" 
         Width="670"
         KeyDown="Window_KeyDown"
@@ -30,7 +30,7 @@
         <tb:TaskbarIcon
             x:Key="TrayIcon"
             IconSource="icon.ico"
-            ToolTipText="Восемь секунд"
+            ToolTipText="Восемь секунд 🥷🏻"
             Visibility="Visible">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
@@ -120,11 +120,14 @@
                     <ComboBoxItem Content="11:30"/>
                     <ComboBoxItem Content="12:00"/>
                     <ComboBoxItem Content="12:30"/>
+                    <ComboBoxItem Content="12:40"/>
                     <ComboBoxItem Content="14:00"/>
                     <ComboBoxItem Content="14:30"/>
                     <ComboBoxItem Content="15:00"/>
-                    <ComboBoxItem Content="15:11"/>
+                    <ComboBoxItem Content="15:43"/>
+                    <ComboBoxItem Content="15:30"/>
                     <ComboBoxItem Content="16:00"/>
+                    <ComboBoxItem Content="16:30"/>
                     <ComboBoxItem Content="17:00"/>
                 </ComboBox>
 
@@ -152,6 +155,8 @@
 
             <!-- Список напоминаний -->
             <ListBox x:Name="RemindersList" ItemsSource="{Binding Reminders}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                      Margin="10,10,10,10"
                      SelectionChanged="RemindersList_SelectionChanged"
                      Grid.Row="3" Background="#FFF1F1F1">
@@ -199,14 +204,18 @@
                                 </Border.Effect>
 
                                 <TextBox Text="{Binding .}" 
-                                         IsReadOnly="True"
-                                         Background="Transparent"
-                                         FontSize="20"
-                                         BorderThickness="0"
-                                         Foreground="Black"
-                                         TextWrapping="Wrap"
-                                         Cursor="Hand"
-                                         PreviewMouseDown="RemindersList_PreviewMouseDown"/>
+          IsReadOnly="True"
+          Background="Transparent"
+          FontSize="20"
+          BorderThickness="0"
+          Foreground="Black"
+          TextWrapping="Wrap"
+          MinHeight="30"
+         TextAlignment="Left"
+         
+          Cursor="Hand"
+          PreviewMouseDown="RemindersList_PreviewMouseDown"/>
+                               
                             </Border>
                         </StackPanel>
                     </DataTemplate>

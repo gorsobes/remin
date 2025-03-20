@@ -11,6 +11,7 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Drawing;
 using System.Windows.Media.Imaging;
 
+
 namespace remin
 {
     public partial class MainWindow : Window
@@ -38,7 +39,7 @@ namespace remin
                     Uri iconUri = new Uri("icon.ico", UriKind.RelativeOrAbsolute);
                     taskbarIcon.IconSource = BitmapFrame.Create(iconUri);
                     // Подписываемся на событие двойного клика
-                    taskbarIcon.TrayMouseDoubleClick += TaskbarIcon_TrayMouseDoubleClick;
+                   taskbarIcon.TrayMouseDoubleClick += TaskbarIcon_TrayMouseDoubleClick;
                 }
                 catch (Exception ex)
                 {
@@ -150,7 +151,7 @@ namespace remin
             foreach (var reminder in Reminders.ToList()) // Перебираем все задания
             {
                 string[] parts = reminder.Split(' ');
-                
+
                 if (parts.Length >= 3)
                 {
                     string reminderTime = parts[1]; // Время напоминания
@@ -160,7 +161,7 @@ namespace remin
                     }
                 }
             }
-        } 
+        }
 
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -237,7 +238,7 @@ namespace remin
                       ? selectedItem.Content.ToString()
                       : null; // Убираем "00:00", если время не выбрано
 
-                string reminder = time != null ? $"{date} {time} {text}" : $"{date} {text}";
+                string reminder = time != null ? $"{date} {time} 💀 {text} 🥷🏻" : $"{date} 💀 {text} 🥷🏻";
 
 
                 Reminders.Add(reminder);
@@ -252,6 +253,8 @@ namespace remin
                 InputTextBox.Clear();
                 AddButton.IsEnabled = false;
                 SaveReminders();
+                // Сбрасываем выбор времени на "--:--"
+                ReminderTimePicker.SelectedIndex = 0;
             }
         }
 
@@ -323,7 +326,14 @@ namespace remin
             }
         }
 
-
+        // Обработчик для клика по ссылке
+       // private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+      //  {
+        //    Process.Start(new ProcessStartInfo(e.Uri.ToString()) { UseShellExecute = true });
+        /// <summary>
+        ///    e.Handled = true; // Предотвращает стандартное поведение
+        /// </summary>
+       // }
 
         private void SaveReminders() => File.WriteAllLines(FilePath, Reminders);
 
