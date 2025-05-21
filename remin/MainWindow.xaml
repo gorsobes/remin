@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         xmlns:tb="http://www.hardcodet.net/taskbar"
-        Title="Восемь секунд 🥷🏻" 
+        Title="Восемь секунд" 
         Height="820" 
         Width="670"
         KeyDown="Window_KeyDown"
@@ -30,7 +30,7 @@
         <tb:TaskbarIcon
             x:Key="TrayIcon"
             IconSource="icon.ico"
-            ToolTipText="Восемь секунд 🥷🏻"
+            ToolTipText="Восемь секунд"
             Visibility="Visible">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
@@ -51,7 +51,7 @@
         </Grid.RowDefinitions>
 
         <!-- Панель заголовка -->
-        <Border Grid.Row="0" Background="#FF117767" MouseLeftButtonDown="Border_MouseLeftButtonDown">
+        <Border Grid.Row="0" Background="#999" MouseLeftButtonDown="Border_MouseLeftButtonDown">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <!-- Кнопка сворачивания -->
                 <Button Content="─"
@@ -77,8 +77,8 @@
         <Grid Grid.Row="1">
             <Grid.Background>
                 <RadialGradientBrush>
-                    <GradientStop Color="#FF031E52"/>
-                    <GradientStop Color="#FF117767" Offset="1"/>
+                    <GradientStop Color="#369"/>
+                    <GradientStop Color="#78A2B7" Offset="1.2"/>
                 </RadialGradientBrush>
             </Grid.Background>
 
@@ -112,23 +112,38 @@
                           Background="Black">
                     <ComboBoxItem Content="--:--"/>
                     <ComboBoxItem Content="08:30"/>
+                    <ComboBoxItem Content="08:45"/>
                     <ComboBoxItem Content="09:00"/>
+                    <ComboBoxItem Content="09:15"/>
                     <ComboBoxItem Content="09:30"/>
+                    <ComboBoxItem Content="09:45"/>
                     <ComboBoxItem Content="10:00"/>
+                    <ComboBoxItem Content="10:15"/>
                     <ComboBoxItem Content="10:30"/>
+                    <ComboBoxItem Content="10:45"/>
                     <ComboBoxItem Content="11:00"/>
+                    <ComboBoxItem Content="11:15"/>
                     <ComboBoxItem Content="11:30"/>
+                    <ComboBoxItem Content="11:45"/>
                     <ComboBoxItem Content="12:00"/>
+                    <ComboBoxItem Content="12:15"/>
                     <ComboBoxItem Content="12:30"/>
-                    <ComboBoxItem Content="12:40"/>
+                    <ComboBoxItem Content="12:45"/>
                     <ComboBoxItem Content="14:00"/>
+                    <ComboBoxItem Content="14:15"/>
                     <ComboBoxItem Content="14:30"/>
+                    <ComboBoxItem Content="14:45"/>
                     <ComboBoxItem Content="15:00"/>
-                    <ComboBoxItem Content="15:43"/>
+                    <ComboBoxItem Content="15:15"/>
                     <ComboBoxItem Content="15:30"/>
+                    <ComboBoxItem Content="15:45"/>
                     <ComboBoxItem Content="16:00"/>
+                    <ComboBoxItem Content="16:15"/>
                     <ComboBoxItem Content="16:30"/>
+                    <ComboBoxItem Content="16:45"/>
                     <ComboBoxItem Content="17:00"/>
+                    <ComboBoxItem Content="17:15"/>
+                    <ComboBoxItem Content="17:30"/>
                 </ComboBox>
 
                 <Button x:Name="ShowAllButton" Content="Показать всё" Width="100" Height="30"
@@ -147,11 +162,11 @@
             </StackPanel>
 
             <!-- Кнопка очистки истории -->
-            <Button x:Name="ClearHistoryButton" Content="cl history"
-                    Width="59"
+            <Button x:Name="ClearHistoryButton" Content="history"
+                    Width="60"
                     Click="ClearHistoryButton_Click"
                     HorizontalAlignment="Left" Margin="584,10,0,10"
-                    Grid.Row="1" Background="#FFE48B8B" BorderBrush="#FFFFF504"/>
+                    Grid.Row="1" Background="#999" BorderBrush="#FFF"/>
 
             <!-- Список напоминаний -->
             <ListBox x:Name="RemindersList" ItemsSource="{Binding Reminders}"
@@ -175,7 +190,7 @@
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="Border" Property="Background" Value="#FF638284"/>
+                                            <Setter TargetName="Border" Property="Background" Value="#78A2B7"/>
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="True">
                                             <Setter TargetName="Border" Property="Background" Value="#999"/>
@@ -192,8 +207,8 @@
                         <StackPanel>
                             <StackPanel.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                    <GradientStop Color="#fffbbb"/>
-                                    <GradientStop Color="White" Offset="0.8"/>
+                                    <GradientStop Color="#999"/>
+                                    <GradientStop Color="White" Offset="0.1"/>
                                 </LinearGradientBrush>
                             </StackPanel.Background>
 

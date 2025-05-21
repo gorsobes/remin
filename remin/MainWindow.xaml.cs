@@ -146,22 +146,26 @@ namespace remin
 
         private void ReminderTimer_Tick(object sender, EventArgs e)
         {
-            string currentTime = DateTime.Now.ToString("HH:mm"); // Текущее время
+            string currentDate = DateTime.Now.ToString("dd.MM.yyyy"); // Сегодняшняя дата
+            string currentTime = DateTime.Now.ToString("HH:mm");      // Текущее время
 
-            foreach (var reminder in Reminders.ToList()) // Перебираем все задания
+            foreach (var reminder in Reminders.ToList()) // Перебираем все напоминания
             {
                 string[] parts = reminder.Split(' ');
 
                 if (parts.Length >= 3)
                 {
+                    string reminderDate = parts[0]; // Дата напоминания
                     string reminderTime = parts[1]; // Время напоминания
-                    if (reminderTime == currentTime && reminderTime != "00:00")
+
+                    if (reminderDate == currentDate && reminderTime == currentTime && reminderTime != "00:00")
                     {
                         ShowReminderWindow(reminder);
                     }
                 }
             }
         }
+
 
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -219,13 +223,27 @@ namespace remin
             string[] parts = reminderText.Split(' ');
             if (parts.Length >= 3 && DateTime.TryParse(parts[1], out DateTime originalTime))
             {
+                // 1. Создаём новое напоминание со временем +15 минут
                 DateTime newTime = originalTime.AddMinutes(15);
                 string newReminder = $"{parts[0]} {newTime:HH:mm} {string.Join(" ", parts.Skip(2))}";
 
+                // 2. Удаляем старое напоминание
+                Reminders.Remove(reminderText);
+
+                // 3. Добавляем новое
                 Reminders.Add(newReminder);
+
+                // 4. Обновляем список
+                //RemindersList.ItemsSource = null;
+                //RemindersList.ItemsSource = Reminders;
+
+                // 5. Сохраняем
                 SaveReminders();
+                // 5. Применяем фильтр по выбранной дате снова
+                ApplyDateFilter();
             }
         }
+
 
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
@@ -238,8 +256,10 @@ namespace remin
                       ? selectedItem.Content.ToString()
                       : null; // Убираем "00:00", если время не выбрано
 
-                string reminder = time != null ? $"{date} {time} 💀 {text} 🥷🏻" : $"{date} 💀 {text} 🥷🏻";
-
+                // string reminder = time != null ? $"{date} {time} ➠ ꩜{text} ♞" : $"{date} ➠ {text} ♘";
+                string reminder = time != null
+             ? $"{date} {time} ➠ {text} (◕‿◕)"
+             : $"{date} ➠ {text}";
 
                 Reminders.Add(reminder);
 
@@ -360,9 +380,21 @@ namespace remin
 
         private void ShowAllButton_Click(object sender, RoutedEventArgs e)
         {
-            ReminderDatePicker.SelectedDate = null; // Сбрасываем дату, показываем все записи
-            RemindersList.ItemsSource = Reminders;
+            ReminderDatePicker.SelectedDate = null; // Сброс выбора даты
+
+            var sorted = Reminders
+                .OrderBy(reminder =>
+                {
+                    string[] parts = reminder.Split(' ');
+                    if (parts.Length >= 2 && DateTime.TryParse($"{parts[0]} {parts[1]}", out DateTime dt))
+                        return dt;
+                    return DateTime.MaxValue;
+                })
+                .ToList();
+
+            RemindersList.ItemsSource = new ObservableCollection<string>(sorted);
         }
+
 
 
         private void ReminderDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
@@ -372,8 +404,26 @@ namespace remin
 
         private void ApplyDateFilter()
         {
+            // var selectedDate = ReminderDatePicker.SelectedDate?.ToString("dd.MM.yyyy");
+            // RemindersList.ItemsSource = selectedDate == null ? Reminders : new ObservableCollection<string>(Reminders.Where(r => r.StartsWith(selectedDate)));
+
             var selectedDate = ReminderDatePicker.SelectedDate?.ToString("dd.MM.yyyy");
-            RemindersList.ItemsSource = selectedDate == null ? Reminders : new ObservableCollection<string>(Reminders.Where(r => r.StartsWith(selectedDate)));
+
+            var filtered = selectedDate == null
+                ? Reminders
+                : Reminders.Where(r => r.StartsWith(selectedDate));
+
+            var sorted = filtered
+                .OrderBy(reminder =>
+                {
+                    string[] parts = reminder.Split(' ');
+                    if (parts.Length >= 2 && DateTime.TryParse($"{parts[0]} {parts[1]}", out DateTime dt))
+                        return dt;
+                    return DateTime.MaxValue;
+                });
+
+            RemindersList.ItemsSource = new ObservableCollection<string>(sorted);
+
         }
 
         private void RemindersList_SelectionChanged(object sender, SelectionChangedEventArgs e)
